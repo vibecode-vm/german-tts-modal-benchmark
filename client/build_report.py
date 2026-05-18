@@ -111,6 +111,12 @@ def main():
     if not RESULTS.exists():
         raise SystemExit(f"missing {RESULTS}")
     results = json.loads(RESULTS.read_text())
+    whisper = {}
+    wh_file = REPORTS / "whisper_eval.json"
+    if wh_file.exists():
+        wd = json.loads(wh_file.read_text())
+        whisper["summary"] = wd.get("summary", {})
+        whisper["rows"] = {(r["model"], r["sample"]): r for r in wd.get("rows", [])}
 
     by_model = {}
     for r in results:
@@ -162,6 +168,32 @@ def main():
     P("> **RTF (Real-Time Factor)** < 1.0 = schneller als Echtzeit. Speed-up = wieviel mal schneller als gesprochene Audiolänge synthetisiert.")
     P("")
 
+    # === Quality (Whisper Roundtrip) ===
+    if whisper.get("summary"):
+        P("## 🎯 Qualitäts-Score (Whisper-Roundtrip)")
+        P("")
+        P("Methode: jedes Sample wird mit **Whisper Large-v3** (NVIDIA SOTA-ASR) auf Deutsch transkribiert, danach")
+        P("**Character Error Rate (CER)** und **Word Error Rate (WER)** gegen den Original-Text. Niedriger = verständlicher synthetisiert.")
+        P("")
+        P("| Rang | Modell | Ø CER | Ø WER | Samples | Bewertung |")
+        P("|---:|---|---:|---:|---:|---|")
+        ranking = sorted(whisper["summary"].items(), key=lambda x: x[1]["avg_cer"])
+        emoji = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣"]
+        ratings = {
+            0: "Höchste Verständlichkeit",
+            1: "Sehr nah dran am Top",
+            2: "Gut, kleine Schwächen",
+            3: "Spürbare Aussprache-Drift",
+        }
+        for i, (m, s) in enumerate(ranking):
+            P(f"| {emoji[i] if i < len(emoji) else f'{i+1}.'} | **{MODEL_META[m]['full_name']}** | "
+              f"{s['avg_cer']:.3f} | {s['avg_wer']:.3f} | {s['n']} | {ratings.get(i,'')} |")
+        P("")
+        P("> **Caveats:** Whisper transkribiert Zahlen häufig in Ziffern statt Wörter ('3-4-7-8' statt 'drei-vier-sieben-acht') — die hohen CER bei den `phone`- und `numbers`-Samples sind **identisch über alle Modelle** (gleiches Whisper-Artifact, kein TTS-Problem). Das Ranking spiegelt also Aussprache-Verlässlichkeit bei normalem Fließtext.")
+        P("")
+        P("> Whisper-Eval ≠ MOS (Mean Opinion Score). Misst nur Intelligibilität, nicht Natürlichkeit oder Stimmwahrnehmung. Für 'menschliches Listening' bitte selbst die MP3-Player in der Dialog-Sektion anhören.")
+        P("")
+
     # === Per-utterance details ===
     P("## Detail: Pro Utterance")
     P("")
@@ -170,13 +202,15 @@ def main():
         if not ok: continue
         P(f"### {MODEL_META[m]['full_name']}")
         P("")
-        P("| Sample | Voice | Wall (s) | Synth (s) | Audio (s) | RTF | File |")
-        P("|---|---|---:|---:|---:|---:|---|")
+        P("| Sample | Voice | Wall (s) | Synth (s) | Audio (s) | RTF | CER | File |")
+        P("|---|---|---:|---:|---:|---:|---:|---|")
         for r in ok:
             file = r.get("file", "")
+            wh = whisper.get("rows", {}).get((m, r["sample"])) if whisper else None
+            cer = f"{wh['cer']:.3f}" if wh else "—"
             P(f"| `{r['sample']}` | {r.get('voice','—')} | {r['wall_s']:.2f} | "
               f"{r.get('synth_s',0):.3f} | {r.get('audio_s',0):.3f} | {r.get('rtf',0):.3f} | "
-              f"[🔊 .wav]({file}) |")
+              f"{cer} | [🔊 .wav]({file}) |")
         P("")
 
     # === Dialogue showcase ===
@@ -275,6 +309,29 @@ def main():
     P("### Was im Markt fehlt (Mai 2026)")
     P("- Open-Source **Speech-to-Speech** mit nativer Deutsch-Unterstützung — die 5 Leaderboard-Modelle (PersonaPlex, Moshi, Freeze-Omni, FLM-Audio, Nemotron VoiceChat) sind alle **englisch- oder zh+en-only** oder Early Access")
     P("- Native German voice agents bleiben auf Cascaded ASR + LLM + TTS angewiesen")
+    P("")
+    P("## 🚫 Ausgeschlossene Speech-to-Speech Modelle (Top-5 Leaderboard)")
+    P("")
+    P("Die Artificial Analysis S2S-Leaderboard listet diese 5 als Top-Performer. Keiner ist für deutsche Voice-Agents im Mai 2026 nutzbar:")
+    P("")
+    P("| Modell | Score (Conv. Dyn.) | Sprachen | Status | Warum nicht im Test |")
+    P("|---|---:|---|---|---|")
+    P("| **PersonaPlex 7B** (NVIDIA) | 91.0 % | Englisch | Open Weights (gated) | HF-Card: *„can generate English speech response for English speech input"* — kein Deutsch im Training |")
+    P("| **Nemotron 3 VoiceChat 12B** | 77.8 % | 9 Sprachen inkl. **Deutsch** | 🚧 **Early Access** | NVIDIA-Approval nötig, Weights nicht öffentlich downloadbar |")
+    P("| **FLM-Audio 7-8B** (CofeAI) | 62.0 % | Chinesisch + Englisch | Apache-2.0 (research-only) | Trainingsdaten: ZH+EN, keine DE-Transfer-Behauptung |")
+    P("| **Moshi 7B** (Kyutai) | 61.0 % | Englisch | MIT | FAQ-Zitat: *„Moshi only speaks English"* |")
+    P("| **Freeze-Omni 7B + Qwen2** | 58.7 % | Chinesisch + Englisch | Apache-2.0 | Training: 110k h ZH+EN Audio, kein DE |")
+    P("")
+    P("### Nemotron 3 VoiceChat 12B — Sprachen im Detail")
+    P("")
+    P("NVIDIA gibt die Liste nicht direkt raus. Über das TTS-Backbone **[Magpie TTS Multilingual 357M](https://huggingface.co/nvidia/magpie_tts_multilingual_357m)** sind **9 Sprachen** bestätigt:")
+    P("")
+    P("| ✅ Unterstützt | ❌ NICHT im 9-Set |")
+    P("|---|---|")
+    P("| Englisch · **Deutsch** · Französisch · Spanisch | Portugiesisch · Koreanisch · Arabisch · Russisch |")
+    P("| Italienisch · Vietnamesisch · Chinesisch · Hindi · Japanisch | Niederländisch · Polnisch · Türkisch |")
+    P("")
+    P("> Caveat: Die ASR-Seite (Sprach-Eingabe verstehen) könnte abweichen — nicht dokumentiert. Die '12 Sprachen' im GTC-Press-Release beziehen sich auf **Nemotron Content Safety**, NICHT auf VoiceChat.")
     P("")
 
     P("---")

@@ -28,87 +28,103 @@ Each model was woken from cold-start, hit with the same 15-utterance test set (4
 
 > **RTF (Real-Time Factor)** < 1.0 = schneller als Echtzeit. Speed-up = wieviel mal schneller als gesprochene Audiolänge synthetisiert.
 
+## 🎯 Qualitäts-Score (Whisper-Roundtrip)
+
+Methode: jedes Sample wird mit **Whisper Large-v3** (NVIDIA SOTA-ASR) auf Deutsch transkribiert, danach
+**Character Error Rate (CER)** und **Word Error Rate (WER)** gegen den Original-Text. Niedriger = verständlicher synthetisiert.
+
+| Rang | Modell | Ø CER | Ø WER | Samples | Bewertung |
+|---:|---|---:|---:|---:|---|
+| 🥇 | **Piper TTS (Rhasspy)** | 0.137 | 0.146 | 15 | Höchste Verständlichkeit |
+| 🥈 | **Coqui Thorsten-VITS DE** | 0.147 | 0.163 | 15 | Sehr nah dran am Top |
+| 🥉 | **Meta MMS-TTS Deutsch** | 0.153 | 0.181 | 15 | Gut, kleine Schwächen |
+| 4️⃣ | **Coqui XTTS-v2** | 0.268 | 0.247 | 15 | Spürbare Aussprache-Drift |
+
+> **Caveats:** Whisper transkribiert Zahlen häufig in Ziffern statt Wörter ('3-4-7-8' statt 'drei-vier-sieben-acht') — die hohen CER bei den `phone`- und `numbers`-Samples sind **identisch über alle Modelle** (gleiches Whisper-Artifact, kein TTS-Problem). Das Ranking spiegelt also Aussprache-Verlässlichkeit bei normalem Fließtext.
+
+> Whisper-Eval ≠ MOS (Mean Opinion Score). Misst nur Intelligibilität, nicht Natürlichkeit oder Stimmwahrnehmung. Für 'menschliches Listening' bitte selbst die MP3-Player in der Dialog-Sektion anhören.
+
 ## Detail: Pro Utterance
 
 ### Meta MMS-TTS Deutsch
 
-| Sample | Voice | Wall (s) | Synth (s) | Audio (s) | RTF | File |
-|---|---|---:|---:|---:|---:|---|
-| `greeting` | default | 11.85 | 0.332 | 3.872 | 0.086 | [🔊 .wav](audio_out/mms__short__greeting.wav) |
-| `umlauts` | default | 1.31 | 0.461 | 4.576 | 0.101 | [🔊 .wav](audio_out/mms__short__umlauts.wav) |
-| `numbers` | default | 1.15 | 0.144 | 5.904 | 0.024 | [🔊 .wav](audio_out/mms__short__numbers.wav) |
-| `phone` | default | 1.20 | 0.158 | 6.400 | 0.025 | [🔊 .wav](audio_out/mms__short__phone.wav) |
-| `00_agent` | default | 1.00 | 0.147 | 4.240 | 0.035 | [🔊 .wav](audio_out/mms__dialog__00_agent.wav) |
-| `01_agent` | default | 1.22 | 0.137 | 4.672 | 0.029 | [🔊 .wav](audio_out/mms__dialog__01_agent.wav) |
-| `02_user` | default | 1.07 | 0.130 | 4.016 | 0.032 | [🔊 .wav](audio_out/mms__dialog__02_user.wav) |
-| `03_agent` | default | 1.08 | 0.135 | 5.440 | 0.025 | [🔊 .wav](audio_out/mms__dialog__03_agent.wav) |
-| `04_user` | default | 1.15 | 0.136 | 4.800 | 0.028 | [🔊 .wav](audio_out/mms__dialog__04_user.wav) |
-| `05_agent` | default | 1.22 | 0.134 | 5.392 | 0.025 | [🔊 .wav](audio_out/mms__dialog__05_agent.wav) |
-| `06_agent` | default | 1.24 | 0.133 | 4.368 | 0.030 | [🔊 .wav](audio_out/mms__dialog__06_agent.wav) |
-| `07_user` | default | 1.07 | 0.135 | 3.488 | 0.039 | [🔊 .wav](audio_out/mms__dialog__07_user.wav) |
-| `08_agent` | default | 1.04 | 0.134 | 4.992 | 0.027 | [🔊 .wav](audio_out/mms__dialog__08_agent.wav) |
-| `09_user` | default | 1.00 | 0.132 | 3.872 | 0.034 | [🔊 .wav](audio_out/mms__dialog__09_user.wav) |
-| `10_agent` | default | 1.01 | 0.130 | 3.024 | 0.043 | [🔊 .wav](audio_out/mms__dialog__10_agent.wav) |
+| Sample | Voice | Wall (s) | Synth (s) | Audio (s) | RTF | CER | File |
+|---|---|---:|---:|---:|---:|---:|---|
+| `greeting` | default | 11.85 | 0.332 | 3.872 | 0.086 | 0.022 | [🔊 .wav](audio_out/mms__short__greeting.wav) |
+| `umlauts` | default | 1.31 | 0.461 | 4.576 | 0.101 | 0.057 | [🔊 .wav](audio_out/mms__short__umlauts.wav) |
+| `numbers` | default | 1.15 | 0.144 | 5.904 | 0.024 | 0.487 | [🔊 .wav](audio_out/mms__short__numbers.wav) |
+| `phone` | default | 1.20 | 0.158 | 6.400 | 0.025 | 0.709 | [🔊 .wav](audio_out/mms__short__phone.wav) |
+| `00_agent` | default | 1.00 | 0.147 | 4.240 | 0.035 | 0.058 | [🔊 .wav](audio_out/mms__dialog__00_agent.wav) |
+| `01_agent` | default | 1.22 | 0.137 | 4.672 | 0.029 | 0.377 | [🔊 .wav](audio_out/mms__dialog__01_agent.wav) |
+| `02_user` | default | 1.07 | 0.130 | 4.016 | 0.032 | 0.000 | [🔊 .wav](audio_out/mms__dialog__02_user.wav) |
+| `03_agent` | default | 1.08 | 0.135 | 5.440 | 0.025 | 0.000 | [🔊 .wav](audio_out/mms__dialog__03_agent.wav) |
+| `04_user` | default | 1.15 | 0.136 | 4.800 | 0.028 | 0.000 | [🔊 .wav](audio_out/mms__dialog__04_user.wav) |
+| `05_agent` | default | 1.22 | 0.134 | 5.392 | 0.025 | 0.152 | [🔊 .wav](audio_out/mms__dialog__05_agent.wav) |
+| `06_agent` | default | 1.24 | 0.133 | 4.368 | 0.030 | 0.014 | [🔊 .wav](audio_out/mms__dialog__06_agent.wav) |
+| `07_user` | default | 1.07 | 0.135 | 3.488 | 0.039 | 0.000 | [🔊 .wav](audio_out/mms__dialog__07_user.wav) |
+| `08_agent` | default | 1.04 | 0.134 | 4.992 | 0.027 | 0.419 | [🔊 .wav](audio_out/mms__dialog__08_agent.wav) |
+| `09_user` | default | 1.00 | 0.132 | 3.872 | 0.034 | 0.000 | [🔊 .wav](audio_out/mms__dialog__09_user.wav) |
+| `10_agent` | default | 1.01 | 0.130 | 3.024 | 0.043 | 0.000 | [🔊 .wav](audio_out/mms__dialog__10_agent.wav) |
 
 ### Piper TTS (Rhasspy)
 
-| Sample | Voice | Wall (s) | Synth (s) | Audio (s) | RTF | File |
-|---|---|---:|---:|---:|---:|---|
-| `greeting` | de_DE-thorsten-medium | 11.23 | 6.171 | 2.995 | 2.060 | [🔊 .wav](audio_out/piper__short__greeting.wav) |
-| `umlauts` | de_DE-thorsten-medium | 3.43 | 2.239 | 5.016 | 0.446 | [🔊 .wav](audio_out/piper__short__umlauts.wav) |
-| `numbers` | de_DE-thorsten-medium | 3.53 | 2.175 | 4.377 | 0.497 | [🔊 .wav](audio_out/piper__short__numbers.wav) |
-| `phone` | de_DE-thorsten-medium | 3.28 | 2.203 | 5.120 | 0.430 | [🔊 .wav](audio_out/piper__short__phone.wav) |
-| `00_agent` | de_DE-kerstin-low | 4.14 | 3.057 | 2.635 | 1.160 | [🔊 .wav](audio_out/piper__dialog__00_agent.wav) |
-| `01_agent` | de_DE-kerstin-low | 3.11 | 2.143 | 3.402 | 0.630 | [🔊 .wav](audio_out/piper__dialog__01_agent.wav) |
-| `02_user` | de_DE-thorsten-medium | 3.16 | 2.151 | 3.228 | 0.666 | [🔊 .wav](audio_out/piper__dialog__02_user.wav) |
-| `03_agent` | de_DE-kerstin-low | 3.28 | 2.186 | 3.692 | 0.592 | [🔊 .wav](audio_out/piper__dialog__03_agent.wav) |
-| `04_user` | de_DE-thorsten-medium | 3.16 | 2.114 | 3.077 | 0.687 | [🔊 .wav](audio_out/piper__dialog__04_user.wav) |
-| `05_agent` | de_DE-kerstin-low | 3.08 | 2.064 | 2.752 | 0.750 | [🔊 .wav](audio_out/piper__dialog__05_agent.wav) |
-| `06_agent` | de_DE-kerstin-low | 3.11 | 2.123 | 3.088 | 0.687 | [🔊 .wav](audio_out/piper__dialog__06_agent.wav) |
-| `07_user` | de_DE-thorsten-medium | 3.07 | 2.111 | 2.577 | 0.819 | [🔊 .wav](audio_out/piper__dialog__07_user.wav) |
-| `08_agent` | de_DE-kerstin-low | 3.37 | 2.292 | 3.088 | 0.742 | [🔊 .wav](audio_out/piper__dialog__08_agent.wav) |
-| `09_user` | de_DE-thorsten-medium | 3.31 | 2.064 | 3.077 | 0.671 | [🔊 .wav](audio_out/piper__dialog__09_user.wav) |
-| `10_agent` | de_DE-kerstin-low | 2.91 | 2.011 | 1.591 | 1.264 | [🔊 .wav](audio_out/piper__dialog__10_agent.wav) |
+| Sample | Voice | Wall (s) | Synth (s) | Audio (s) | RTF | CER | File |
+|---|---|---:|---:|---:|---:|---:|---|
+| `greeting` | de_DE-thorsten-medium | 11.23 | 6.171 | 2.995 | 2.060 | 0.000 | [🔊 .wav](audio_out/piper__short__greeting.wav) |
+| `umlauts` | de_DE-thorsten-medium | 3.43 | 2.239 | 5.016 | 0.446 | 0.019 | [🔊 .wav](audio_out/piper__short__umlauts.wav) |
+| `numbers` | de_DE-thorsten-medium | 3.53 | 2.175 | 4.377 | 0.497 | 0.487 | [🔊 .wav](audio_out/piper__short__numbers.wav) |
+| `phone` | de_DE-thorsten-medium | 3.28 | 2.203 | 5.120 | 0.430 | 0.698 | [🔊 .wav](audio_out/piper__short__phone.wav) |
+| `00_agent` | de_DE-kerstin-low | 4.14 | 3.057 | 2.635 | 1.160 | 0.038 | [🔊 .wav](audio_out/piper__dialog__00_agent.wav) |
+| `01_agent` | de_DE-kerstin-low | 3.11 | 2.143 | 3.402 | 0.630 | 0.377 | [🔊 .wav](audio_out/piper__dialog__01_agent.wav) |
+| `02_user` | de_DE-thorsten-medium | 3.16 | 2.151 | 3.228 | 0.666 | 0.000 | [🔊 .wav](audio_out/piper__dialog__02_user.wav) |
+| `03_agent` | de_DE-kerstin-low | 3.28 | 2.186 | 3.692 | 0.592 | 0.024 | [🔊 .wav](audio_out/piper__dialog__03_agent.wav) |
+| `04_user` | de_DE-thorsten-medium | 3.16 | 2.114 | 3.077 | 0.687 | 0.000 | [🔊 .wav](audio_out/piper__dialog__04_user.wav) |
+| `05_agent` | de_DE-kerstin-low | 3.08 | 2.064 | 2.752 | 0.750 | 0.000 | [🔊 .wav](audio_out/piper__dialog__05_agent.wav) |
+| `06_agent` | de_DE-kerstin-low | 3.11 | 2.123 | 3.088 | 0.687 | 0.000 | [🔊 .wav](audio_out/piper__dialog__06_agent.wav) |
+| `07_user` | de_DE-thorsten-medium | 3.07 | 2.111 | 2.577 | 0.819 | 0.000 | [🔊 .wav](audio_out/piper__dialog__07_user.wav) |
+| `08_agent` | de_DE-kerstin-low | 3.37 | 2.292 | 3.088 | 0.742 | 0.419 | [🔊 .wav](audio_out/piper__dialog__08_agent.wav) |
+| `09_user` | de_DE-thorsten-medium | 3.31 | 2.064 | 3.077 | 0.671 | 0.000 | [🔊 .wav](audio_out/piper__dialog__09_user.wav) |
+| `10_agent` | de_DE-kerstin-low | 2.91 | 2.011 | 1.591 | 1.264 | 0.000 | [🔊 .wav](audio_out/piper__dialog__10_agent.wav) |
 
 ### Coqui XTTS-v2
 
-| Sample | Voice | Wall (s) | Synth (s) | Audio (s) | RTF | File |
-|---|---|---:|---:|---:|---:|---|
-| `greeting` | female | 123.80 | 3.398 | 8.620 | 0.394 | [🔊 .wav](audio_out/xtts__short__greeting.wav) |
-| `umlauts` | female | 3.13 | 1.981 | 5.473 | 0.362 | [🔊 .wav](audio_out/xtts__short__umlauts.wav) |
-| `numbers` | female | 3.69 | 2.553 | 6.870 | 0.372 | [🔊 .wav](audio_out/xtts__short__numbers.wav) |
-| `phone` | female | 4.18 | 2.808 | 7.563 | 0.371 | [🔊 .wav](audio_out/xtts__short__phone.wav) |
-| `00_agent` | female | 5.46 | 4.295 | 9.046 | 0.475 | [🔊 .wav](audio_out/xtts__dialog__00_agent.wav) |
-| `01_agent` | female | 3.23 | 2.124 | 6.123 | 0.347 | [🔊 .wav](audio_out/xtts__dialog__01_agent.wav) |
-| `02_user` | male | 2.95 | 1.923 | 4.908 | 0.392 | [🔊 .wav](audio_out/xtts__dialog__02_user.wav) |
-| `03_agent` | female | 3.67 | 2.607 | 7.415 | 0.352 | [🔊 .wav](audio_out/xtts__dialog__03_agent.wav) |
-| `04_user` | male | 2.89 | 1.641 | 4.780 | 0.343 | [🔊 .wav](audio_out/xtts__dialog__04_user.wav) |
-| `05_agent` | female | 4.86 | 3.491 | 9.323 | 0.374 | [🔊 .wav](audio_out/xtts__dialog__05_agent.wav) |
-| `06_agent` | female | 2.76 | 1.784 | 4.961 | 0.360 | [🔊 .wav](audio_out/xtts__dialog__06_agent.wav) |
-| `07_user` | male | 2.90 | 1.765 | 5.089 | 0.347 | [🔊 .wav](audio_out/xtts__dialog__07_user.wav) |
-| `08_agent` | female | 3.06 | 2.109 | 5.654 | 0.373 | [🔊 .wav](audio_out/xtts__dialog__08_agent.wav) |
-| `09_user` | male | 3.92 | 2.799 | 7.841 | 0.357 | [🔊 .wav](audio_out/xtts__dialog__09_user.wav) |
-| `10_agent` | female | 3.68 | 2.404 | 6.262 | 0.384 | [🔊 .wav](audio_out/xtts__dialog__10_agent.wav) |
+| Sample | Voice | Wall (s) | Synth (s) | Audio (s) | RTF | CER | File |
+|---|---|---:|---:|---:|---:|---:|---|
+| `greeting` | female | 123.80 | 3.398 | 8.620 | 0.394 | 0.348 | [🔊 .wav](audio_out/xtts__short__greeting.wav) |
+| `umlauts` | female | 3.13 | 1.981 | 5.473 | 0.362 | 0.000 | [🔊 .wav](audio_out/xtts__short__umlauts.wav) |
+| `numbers` | female | 3.69 | 2.553 | 6.870 | 0.372 | 0.487 | [🔊 .wav](audio_out/xtts__short__numbers.wav) |
+| `phone` | female | 4.18 | 2.808 | 7.563 | 0.371 | 0.698 | [🔊 .wav](audio_out/xtts__short__phone.wav) |
+| `00_agent` | female | 5.46 | 4.295 | 9.046 | 0.475 | 0.865 | [🔊 .wav](audio_out/xtts__dialog__00_agent.wav) |
+| `01_agent` | female | 3.23 | 2.124 | 6.123 | 0.347 | 0.377 | [🔊 .wav](audio_out/xtts__dialog__01_agent.wav) |
+| `02_user` | male | 2.95 | 1.923 | 4.908 | 0.392 | 0.000 | [🔊 .wav](audio_out/xtts__dialog__02_user.wav) |
+| `03_agent` | female | 3.67 | 2.607 | 7.415 | 0.352 | 0.000 | [🔊 .wav](audio_out/xtts__dialog__03_agent.wav) |
+| `04_user` | male | 2.89 | 1.641 | 4.780 | 0.343 | 0.000 | [🔊 .wav](audio_out/xtts__dialog__04_user.wav) |
+| `05_agent` | female | 4.86 | 3.491 | 9.323 | 0.374 | 0.545 | [🔊 .wav](audio_out/xtts__dialog__05_agent.wav) |
+| `06_agent` | female | 2.76 | 1.784 | 4.961 | 0.360 | 0.000 | [🔊 .wav](audio_out/xtts__dialog__06_agent.wav) |
+| `07_user` | male | 2.90 | 1.765 | 5.089 | 0.347 | 0.286 | [🔊 .wav](audio_out/xtts__dialog__07_user.wav) |
+| `08_agent` | female | 3.06 | 2.109 | 5.654 | 0.373 | 0.419 | [🔊 .wav](audio_out/xtts__dialog__08_agent.wav) |
+| `09_user` | male | 3.92 | 2.799 | 7.841 | 0.357 | 0.000 | [🔊 .wav](audio_out/xtts__dialog__09_user.wav) |
+| `10_agent` | female | 3.68 | 2.404 | 6.262 | 0.384 | 0.000 | [🔊 .wav](audio_out/xtts__dialog__10_agent.wav) |
 
 ### Coqui Thorsten-VITS DE
 
-| Sample | Voice | Wall (s) | Synth (s) | Audio (s) | RTF | File |
-|---|---|---:|---:|---:|---:|---|
-| `greeting` | default | 89.94 | 1.348 | 4.796 | 0.281 | [🔊 .wav](audio_out/thorsten__short__greeting.wav) |
-| `umlauts` | default | 1.91 | 0.847 | 5.481 | 0.154 | [🔊 .wav](audio_out/thorsten__short__umlauts.wav) |
-| `numbers` | default | 1.88 | 0.712 | 5.225 | 0.136 | [🔊 .wav](audio_out/thorsten__short__numbers.wav) |
-| `phone` | default | 2.05 | 0.859 | 6.247 | 0.138 | [🔊 .wav](audio_out/thorsten__short__phone.wav) |
-| `00_agent` | default | 1.84 | 0.903 | 3.728 | 0.242 | [🔊 .wav](audio_out/thorsten__dialog__00_agent.wav) |
-| `01_agent` | default | 1.65 | 0.623 | 4.505 | 0.138 | [🔊 .wav](audio_out/thorsten__dialog__01_agent.wav) |
-| `02_user` | default | 2.42 | 1.294 | 5.342 | 0.242 | [🔊 .wav](audio_out/thorsten__dialog__02_user.wav) |
-| `03_agent` | default | 2.15 | 0.938 | 6.329 | 0.148 | [🔊 .wav](audio_out/thorsten__dialog__03_agent.wav) |
-| `04_user` | default | 2.23 | 0.982 | 5.029 | 0.195 | [🔊 .wav](audio_out/thorsten__dialog__04_user.wav) |
-| `05_agent` | default | 2.11 | 1.054 | 4.378 | 0.241 | [🔊 .wav](audio_out/thorsten__dialog__05_agent.wav) |
-| `06_agent` | default | 2.54 | 0.937 | 4.714 | 0.199 | [🔊 .wav](audio_out/thorsten__dialog__06_agent.wav) |
-| `07_user` | default | 1.66 | 0.725 | 4.320 | 0.168 | [🔊 .wav](audio_out/thorsten__dialog__07_user.wav) |
-| `08_agent` | default | 1.77 | 0.671 | 4.656 | 0.144 | [🔊 .wav](audio_out/thorsten__dialog__08_agent.wav) |
-| `09_user` | default | 1.82 | 0.940 | 5.029 | 0.187 | [🔊 .wav](audio_out/thorsten__dialog__09_user.wav) |
-| `10_agent` | default | 1.34 | 0.407 | 2.857 | 0.142 | [🔊 .wav](audio_out/thorsten__dialog__10_agent.wav) |
+| Sample | Voice | Wall (s) | Synth (s) | Audio (s) | RTF | CER | File |
+|---|---|---:|---:|---:|---:|---:|---|
+| `greeting` | default | 89.94 | 1.348 | 4.796 | 0.281 | 0.000 | [🔊 .wav](audio_out/thorsten__short__greeting.wav) |
+| `umlauts` | default | 1.91 | 0.847 | 5.481 | 0.154 | 0.019 | [🔊 .wav](audio_out/thorsten__short__umlauts.wav) |
+| `numbers` | default | 1.88 | 0.712 | 5.225 | 0.136 | 0.487 | [🔊 .wav](audio_out/thorsten__short__numbers.wav) |
+| `phone` | default | 2.05 | 0.859 | 6.247 | 0.138 | 0.698 | [🔊 .wav](audio_out/thorsten__short__phone.wav) |
+| `00_agent` | default | 1.84 | 0.903 | 3.728 | 0.242 | 0.058 | [🔊 .wav](audio_out/thorsten__dialog__00_agent.wav) |
+| `01_agent` | default | 1.65 | 0.623 | 4.505 | 0.138 | 0.377 | [🔊 .wav](audio_out/thorsten__dialog__01_agent.wav) |
+| `02_user` | default | 2.42 | 1.294 | 5.342 | 0.242 | 0.034 | [🔊 .wav](audio_out/thorsten__dialog__02_user.wav) |
+| `03_agent` | default | 2.15 | 0.938 | 6.329 | 0.148 | 0.024 | [🔊 .wav](audio_out/thorsten__dialog__03_agent.wav) |
+| `04_user` | default | 2.23 | 0.982 | 5.029 | 0.195 | 0.000 | [🔊 .wav](audio_out/thorsten__dialog__04_user.wav) |
+| `05_agent` | default | 2.11 | 1.054 | 4.378 | 0.241 | 0.015 | [🔊 .wav](audio_out/thorsten__dialog__05_agent.wav) |
+| `06_agent` | default | 2.54 | 0.937 | 4.714 | 0.199 | 0.068 | [🔊 .wav](audio_out/thorsten__dialog__06_agent.wav) |
+| `07_user` | default | 1.66 | 0.725 | 4.320 | 0.168 | 0.000 | [🔊 .wav](audio_out/thorsten__dialog__07_user.wav) |
+| `08_agent` | default | 1.77 | 0.671 | 4.656 | 0.144 | 0.419 | [🔊 .wav](audio_out/thorsten__dialog__08_agent.wav) |
+| `09_user` | default | 1.82 | 0.940 | 5.029 | 0.187 | 0.000 | [🔊 .wav](audio_out/thorsten__dialog__09_user.wav) |
+| `10_agent` | default | 1.34 | 0.407 | 2.857 | 0.142 | 0.000 | [🔊 .wav](audio_out/thorsten__dialog__10_agent.wav) |
 
 ## 🎭 Buchhaltungs-Dialog (Vergleich der Stimmen)
 

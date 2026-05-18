@@ -23,8 +23,21 @@ RAW_BASE = "https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-bench
 
 
 def audio_player(rel_path: str) -> str:
-    """Inline HTML audio player rendered on GitHub README via raw URL."""
-    return f'<audio controls preload="none" src="{RAW_BASE}/{rel_path}"></audio>'
+    """Inline HTML audio player using MP3 version (3× smaller, browser-friendly).
+
+    Falls back to WAV link if MP3 not present.
+    """
+    # Map audio_out/foo.wav -> audio_mp3/foo.mp3
+    mp3 = rel_path.replace("audio_out/", "audio_mp3/").replace(".wav", ".mp3")
+    mp3_full = ROOT / mp3
+    src = mp3 if mp3_full.exists() else rel_path
+    media = "audio/mpeg" if src.endswith(".mp3") else "audio/wav"
+    return (
+        f'<audio controls preload="none">'
+        f'<source src="{RAW_BASE}/{src}" type="{media}">'
+        f'<a href="{RAW_BASE}/{src}">⬇ {src.split("/")[-1]}</a>'
+        f'</audio>'
+    )
 
 MODEL_META = {
     "piper": {

@@ -8,6 +8,38 @@ Each model was woken from cold-start, hit with the same 15-utterance test set (4
 
 ---
 
+## 🎧 Höre das komplette Buchhaltungs-Gespräch
+
+Realer 11-Zeilen-Dialog (~30–75 Sekunden je Modell, **Agent fordert Rechnung an, User fragt nach Upload-Link**). Klick auf Play, alles inline auf GitHub.
+
+### 🥇 **Empfehlung** Piper TTS (Rhasspy)
+
+<audio controls preload="none" style="width:100%;max-width:540px"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/dialog_full_piper.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/dialog_full_piper.mp3">⬇ dialog_full_piper.mp3</a></audio>
+
+<sub>**CPU** (2 cores) · $0.047/h · MIT · CER 0.137</sub>
+
+### 🥈 Premium-Natürlichkeit Coqui Thorsten-VITS DE
+
+<audio controls preload="none" style="width:100%;max-width:540px"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/dialog_full_thorsten.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/dialog_full_thorsten.mp3">⬇ dialog_full_thorsten.mp3</a></audio>
+
+<sub>L4 (24 GB) · $0.80/h · MIT · CER 0.147</sub>
+
+### 🥉 Schnellste GPU-Latenz Meta MMS-TTS Deutsch
+
+<audio controls preload="none" style="width:100%;max-width:540px"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/dialog_full_mms.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/dialog_full_mms.mp3">⬇ dialog_full_mms.mp3</a></audio>
+
+<sub>L4 (24 GB) · $0.80/h · CC-BY-NC-4.0 · CER 0.153</sub>
+
+### Voice-Cloning-fähig Coqui XTTS-v2
+
+<audio controls preload="none" style="width:100%;max-width:540px"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/dialog_full_xtts.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/dialog_full_xtts.mp3">⬇ dialog_full_xtts.mp3</a></audio>
+
+<sub>L4 (24 GB) · $0.80/h · CPML (nicht-kommerziell) · CER 0.268</sub>
+
+> 🎙️ **Beste Stimme insgesamt**: **Piper TTS** mit der `de_DE-thorsten-medium` Voice — niedrigste Whisper-CER, läuft komplett auf CPU, MIT-Lizenz, ~$0,05/h aktiv. Der Dialog dauert ~35 Sekunden und ist klar, natürlich und vollständig kommerziell nutzbar.
+
+---
+
 ## Modelle im Überblick
 
 | Modell | Params | Lizenz | GPU/Compute | $/h aktiv | Deutsche Voices | Technologie |

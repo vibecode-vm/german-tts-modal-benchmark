@@ -134,6 +134,39 @@ def main():
     P("")
     P("---")
     P("")
+    # === Top showcase: full-dialog audio for each model ===
+    P("## 🎧 Höre das komplette Buchhaltungs-Gespräch")
+    P("")
+    P("Realer 11-Zeilen-Dialog (~30–75 Sekunden je Modell, **Agent fordert Rechnung an, User fragt nach Upload-Link**). Klick auf Play, alles inline auf GitHub.")
+    P("")
+    full_dialog_order = ["piper", "thorsten", "mms", "xtts"]
+    badges = {"piper": "🥇 **Empfehlung**", "thorsten": "🥈 Premium-Natürlichkeit",
+              "mms": "🥉 Schnellste GPU-Latenz", "xtts": "Voice-Cloning-fähig"}
+    for m in full_dialog_order:
+        if m not in by_model: continue
+        meta = MODEL_META[m]
+        # Full dialog file
+        full = f"audio_mp3/dialog_full_{m}.mp3"
+        if not (ROOT / full).exists(): continue
+        P(f"### {badges.get(m, '')} {meta['full_name']}")
+        P("")
+        player = (
+            f'<audio controls preload="none" style="width:100%;max-width:540px">'
+            f'<source src="{RAW_BASE}/{full}" type="audio/mpeg">'
+            f'<a href="{RAW_BASE}/{full}">⬇ {full.split("/")[-1]}</a>'
+            f'</audio>'
+        )
+        P(player)
+        P("")
+        # Stats line
+        wh = whisper.get("summary", {}).get(m, {})
+        cer = f"CER {wh['avg_cer']:.3f}" if wh else ""
+        P(f"<sub>{meta['gpu']} · {meta['cost_per_hr']}/h · {meta['license']} · {cer}</sub>")
+        P("")
+    P("> 🎙️ **Beste Stimme insgesamt**: **Piper TTS** mit der `de_DE-thorsten-medium` Voice — niedrigste Whisper-CER, läuft komplett auf CPU, MIT-Lizenz, ~$0,05/h aktiv. Der Dialog dauert ~35 Sekunden und ist klar, natürlich und vollständig kommerziell nutzbar.")
+    P("")
+    P("---")
+    P("")
 
     # === Model overview table ===
     P("## Modelle im Überblick")

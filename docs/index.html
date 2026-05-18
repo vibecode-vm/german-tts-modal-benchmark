@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>German Open-Source TTS Benchmark on Modal</title>
+<meta name="description" content="4 deutsche Open-Source TTS-Modelle live auf Modal getestet: Latenz, Qualität, Audio-Samples"/>
+<style>
+  :root { --bg:#0b0d12; --fg:#e8eaf0; --accent:#5b8def; --gold:#f5c518; --silver:#b9bdc6; --bronze:#cd7f32; --muted:#9ba3b4; --card:#161922; --line:#2a2f3a }
+  * { box-sizing:border-box }
+  body { font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif; background:var(--bg); color:var(--fg); margin:0; padding:24px; line-height:1.55 }
+  .wrap { max-width:960px; margin:0 auto }
+  h1 { font-size:34px; margin:0 0 4px }
+  h2 { font-size:22px; margin:32px 0 14px; padding-top:8px; border-top:1px solid var(--line) }
+  h3 { font-size:18px; margin:24px 0 8px }
+  .sub { color:var(--muted); margin:0 0 24px }
+  a { color:var(--accent) }
+  table { width:100%; border-collapse:collapse; margin:8px 0 20px; font-size:14px }
+  th, td { padding:8px 10px; text-align:left; border-bottom:1px solid var(--line) }
+  th { background:var(--card); font-weight:600; color:var(--muted) }
+  td.r { text-align:right; font-family:monospace }
+  .badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:12px; font-weight:600; margin-right:4px }
+  .b-gold { background:var(--gold); color:#000 }
+  .b-silver { background:var(--silver); color:#000 }
+  .b-bronze { background:var(--bronze); color:#000 }
+  .b-info { background:var(--accent); color:#fff }
+  audio { width:100%; max-width:540px; margin:6px 0 12px; display:block }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 20px; margin:14px 0 }
+  .card h3 { margin-top:0 }
+  .meta { color:var(--muted); font-size:13px; margin-top:6px; font-family:monospace }
+  textarea, select, button, input { font-size:15px; padding:10px; border-radius:8px; border:1px solid var(--line); background:var(--card); color:var(--fg); font-family:inherit; width:100% }
+  textarea { min-height:90px; resize:vertical }
+  button { background:var(--accent); color:#fff; font-weight:600; cursor:pointer; border-color:var(--accent) }
+  button:hover { filter:brightness(1.1) }
+  button:disabled { opacity:0.6; cursor:wait }
+  .row { display:flex; gap:10px; margin-top:10px }
+  .row > * { flex:1 }
+  .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(380px,1fr)); gap:14px }
+  .footer { color:var(--muted); font-size:13px; margin:32px 0 0; padding-top:16px; border-top:1px solid var(--line) }
+  .stats { color:var(--muted); font-family:monospace; font-size:13px; margin-top:8px }
+  code { background:#21262d; padding:1px 6px; border-radius:4px; font-size:13px }
+  ul { padding-left:20px }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>🎙️ German Open-Source TTS Benchmark on Modal</h1>
+<p class="sub">4 deutsche Open-Source TTS-Modelle live deployed auf <a href="https://modal.com">Modal</a>, real-time getestet, Latenzen gemessen, Audio-Samples direkt abspielbar.</p>
+
+<p><a href="https://github.com/vibecode-vm/german-tts-modal-benchmark"><b>📦 Repo + Code</b></a> · <a href="https://github.com/vibecode-vm/german-tts-modal-benchmark/blob/main/README.md">README mit Detail-Tabellen</a></p>
+
+<h2>🎧 Höre das komplette Buchhaltungs-Gespräch</h2>
+<p class="sub">~30–75-Sekunden-Dialog (Agent fordert Rechnung an, User fragt nach Upload-Link). Klick Play, läuft inline.</p>
+
+<div class="grid2">
+
+<div class="card">
+  <h3><span class="badge b-silver">🥈 Empfehlung</span> Coqui Thorsten-VITS DE</h3>
+  <audio controls preload="none">
+    <source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/dialog_full_thorsten.mp3" type="audio/mpeg">
+    Browser unterstützt MP3 nicht.
+  </audio>
+  <div class="meta">Studio-Qualität · GPU L4 · MIT · CER 0.147 · 53.4s</div>
+</div>
+
+<div class="card">
+  <h3><span class="badge b-gold">🥇 Whisper-Champion</span> Piper TTS</h3>
+  <audio controls preload="none">
+    <source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/dialog_full_piper.mp3" type="audio/mpeg">
+    Browser unterstützt MP3 nicht.
+  </audio>
+  <div class="meta">CPU only · MIT · CER 0.137 · 40.6s · ~$0.05/h</div>
+</div>
+
+<div class="card">
+  <h3><span class="badge b-bronze">🥉 Schnellste GPU-Latenz</span> Meta MMS-TTS DE</h3>
+  <audio controls preload="none">
+    <source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/dialog_full_mms.mp3" type="audio/mpeg">
+    Browser unterstützt MP3 nicht.
+  </audio>
+  <div class="meta">GPU L4 · CC-BY-NC · CER 0.153 · 50.9s · 33.6× realtime</div>
+</div>
+
+<div class="card">
+  <h3><span class="badge b-info">Voice-Cloning</span> Coqui XTTS-v2</h3>
+  <audio controls preload="none">
+    <source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/dialog_full_xtts.mp3" type="audio/mpeg">
+    Browser unterstützt MP3 nicht.
+  </audio>
+  <div class="meta">GPU L4 · CPML (nicht-kommerziell) · CER 0.268 · 74.0s</div>
+</div>
+
+</div>
+
+<h2>🧪 Live testen — eigener Text</h2>
+<div class="card">
+  <p style="margin-top:0">Schreibe deutschen Text, hör live wie Piper das spricht (CPU-Modal, Cold-Start ~30s beim ersten Mal):</p>
+
+  <textarea id="text">Guten Tag, hier spricht die Buchhaltung von Servas AI. Können Sie mir bitte die Rechnung vom April zukommen lassen? Sie erhalten gleich eine E-Mail mit dem Upload-Link.</textarea>
+
+  <div class="row">
+    <select id="voice">
+      <option value="de_DE-thorsten-medium" selected>Thorsten (männlich, beste Qualität)</option>
+      <option value="de_DE-eva_k-x_low">Eva K. (weiblich, x_low)</option>
+      <option value="de_DE-kerstin-low">Kerstin (weiblich, low)</option>
+      <option value="de_DE-pavoque-low">Pavoque (männlich, low)</option>
+    </select>
+    <button id="play" onclick="synth()">▶ Synthetisieren & Abspielen</button>
+  </div>
+
+  <audio id="audio" controls style="display:none; margin-top:14px"></audio>
+  <div class="stats" id="stats"></div>
+</div>
+
+<h2>🎯 Qualitäts-Score (Whisper-Roundtrip)</h2>
+<p>Methode: Whisper Large-v3 (NVIDIA SOTA-ASR) transkribiert jedes synthetisierte Sample, dann CER/WER vs Original-Text. Niedriger = klarer ausgesprochen.</p>
+<table>
+  <tr><th>Rang</th><th>Modell</th><th class="r">Ø CER</th><th class="r">Ø WER</th><th>Verdict</th></tr>
+  <tr><td>🥇</td><td><b>Piper TTS</b> (CPU, MIT)</td><td class="r">0.137</td><td class="r">0.146</td><td>Höchste Verständlichkeit</td></tr>
+  <tr><td>🥈</td><td><b>Thorsten-VITS</b> (L4, MIT)</td><td class="r">0.147</td><td class="r">0.163</td><td>Nahezu gleich, natürlichere Stimme</td></tr>
+  <tr><td>🥉</td><td><b>MMS-TTS DE</b> (L4, CC-BY-NC)</td><td class="r">0.153</td><td class="r">0.181</td><td>Schnellste, kleine Drift</td></tr>
+  <tr><td>4</td><td><b>XTTS-v2</b> (L4, CPML)</td><td class="r">0.268</td><td class="r">0.247</td><td>Schwächste bei Eigennamen</td></tr>
+</table>
+
+<h2>⚡ Latenz-Vergleich (live gemessen)</h2>
+<table>
+  <tr><th>Modell</th><th class="r">Cold-Start</th><th class="r">Warm Wall</th><th class="r">GPU Synth</th><th class="r">RTF</th><th class="r">Speed-up</th></tr>
+  <tr><td>Meta MMS-TTS DE</td><td class="r">11.85s</td><td class="r">1.11s</td><td class="r">0.135s</td><td class="r"><b>0.030</b></td><td class="r"><b>33.6×</b></td></tr>
+  <tr><td>Coqui Thorsten-VITS</td><td class="r">89.94s</td><td class="r">1.95s</td><td class="r">0.880s</td><td class="r">0.176</td><td class="r">5.7×</td></tr>
+  <tr><td>Coqui XTTS-v2</td><td class="r">123.80s</td><td class="r">3.45s</td><td class="r">2.420s</td><td class="r">0.371</td><td class="r">2.7×</td></tr>
+  <tr><td>Piper TTS (CPU)</td><td class="r">12.06s</td><td class="r">2.74s</td><td class="r">1.730s</td><td class="r">0.524</td><td class="r">1.9×</td></tr>
+</table>
+
+<h2>💰 Kosten-Vergleich</h2>
+<table>
+  <tr><th>Modell</th><th class="r">$/h aktiv</th><th class="r">$/min Audio (real-time)</th><th>Lizenz</th></tr>
+  <tr><td>Piper TTS</td><td class="r">$0.047 (CPU)</td><td class="r">~$0.001</td><td>MIT ✅</td></tr>
+  <tr><td>Meta MMS-TTS DE</td><td class="r">$0.80 (L4)</td><td class="r">~$0.0004</td><td>CC-BY-NC ⚠️</td></tr>
+  <tr><td>Coqui Thorsten-VITS</td><td class="r">$0.80 (L4)</td><td class="r">~$0.002</td><td>MIT ✅</td></tr>
+  <tr><td>Coqui XTTS-v2</td><td class="r">$0.80 (L4)</td><td class="r">~$0.005</td><td>CPML (nicht-kommerziell) ⚠️</td></tr>
+</table>
+
+<h2>🚫 Ausgeschlossene Speech-to-Speech Modelle</h2>
+<table>
+  <tr><th>Modell</th><th class="r">Score</th><th>Sprachen</th><th>Grund</th></tr>
+  <tr><td><b>PersonaPlex 7B</b> (NVIDIA)</td><td class="r">91.0%</td><td>Englisch</td><td>HF-Card: "English speech response for English speech input"</td></tr>
+  <tr><td><b>Nemotron 3 VoiceChat 12B</b></td><td class="r">77.8%</td><td>9 Sprachen inkl. DE</td><td>🚧 Early Access — NVIDIA-Approval nötig</td></tr>
+  <tr><td><b>FLM-Audio 7B</b> (CofeAI)</td><td class="r">62.0%</td><td>ZH + EN</td><td>Kein DE-Training</td></tr>
+  <tr><td><b>Moshi 7B</b> (Kyutai)</td><td class="r">61.0%</td><td>Englisch</td><td>FAQ: "Moshi only speaks English"</td></tr>
+  <tr><td><b>Freeze-Omni 7B</b></td><td class="r">58.7%</td><td>ZH + EN</td><td>Kein DE-Training</td></tr>
+</table>
+
+<h3>Nemotron 3 VoiceChat 12B — Sprachen</h3>
+<p>Via Magpie TTS Multilingual Backbone bestätigt: <b>Englisch · Deutsch · Französisch · Spanisch · Italienisch · Vietnamesisch · Chinesisch · Hindi · Japanisch</b> (9 Sprachen).</p>
+<p>NICHT im Set: Portugiesisch, Koreanisch, Arabisch, Russisch, Niederländisch, Polnisch, Türkisch.</p>
+
+<div class="footer">
+  <p>Code: <a href="https://github.com/vibecode-vm/german-tts-modal-benchmark">github.com/vibecode-vm/german-tts-modal-benchmark</a> · Live-Endpoint (Piper): <a href="https://martin-hausleitner--piper-de-tts-piperde-web.modal.run/">piper-de-tts.modal.run</a></p>
+  <p>Tests am 2026-05-18 · Region Modal <code>us</code> · alle 4 Modelle nach Test gestoppt (kein Idle-Burn)</p>
+</div>
+
+</div>
+
+<script>
+const PIPER_URL = "https://martin-hausleitner--piper-de-tts-piperde-web.modal.run";
+
+async function synth() {
+  const btn = document.getElementById('play');
+  const stats = document.getElementById('stats');
+  const audio = document.getElementById('audio');
+  const text = document.getElementById('text').value.trim();
+  const voice = document.getElementById('voice').value;
+  if (!text) { alert('Bitte Text eingeben'); return; }
+  btn.disabled = true; btn.textContent = '⏳ Synthetisiere…';
+  stats.textContent = '';
+  const t0 = performance.now();
+  try {
+    const r = await fetch(PIPER_URL + '/tts', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({text, voice, language:'de'})
+    });
+    if (!r.ok) throw new Error(r.status + ': ' + await r.text());
+    const synthS = parseFloat(r.headers.get('X-Synth-Seconds')||'0');
+    const audioS = parseFloat(r.headers.get('X-Audio-Seconds')||'0');
+    const rtf = parseFloat(r.headers.get('X-RTF')||'0');
+    const wall = ((performance.now()-t0)/1000).toFixed(2);
+    const blob = await r.blob();
+    audio.src = URL.createObjectURL(blob);
+    audio.style.display = 'block'; audio.play();
+    stats.textContent = `Wall: ${wall}s · Synth: ${synthS.toFixed(2)}s · Audio: ${audioS.toFixed(2)}s · RTF: ${rtf.toFixed(3)} (${(1/rtf).toFixed(1)}× realtime)`;
+  } catch (e) {
+    stats.textContent = '❌ Fehler: ' + e.message + ' — Modal Cold-Start kann ~30s dauern beim ersten Aufruf, bitte nochmal probieren.';
+  } finally {
+    btn.disabled = false; btn.textContent = '▶ Synthetisieren & Abspielen';
+  }
+}
+</script>
+</body>
+</html>

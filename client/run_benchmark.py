@@ -87,7 +87,9 @@ def test_model(name: str) -> list[dict]:
         if name == "xtts":
             voice = "female" if spk == "agent" else "male"
         elif name == "piper":
-            voice = "de_DE-thorsten-medium" if spk == "user" else "de_DE-kerstin-low"
+            # Use the higher-quality thorsten-medium voice for both sides
+            # (kerstin-low sounds distorted; thorsten-medium is the only DE voice with decent quality)
+            voice = "de_DE-thorsten-medium"
         elif name == "orpheus":
             voice = "Julia" if spk == "agent" else "Jakob"
         try:

@@ -3,7 +3,7 @@
 **Real-time live tests** of 4 open-source German Text-to-Speech models deployed serverlessly on Modal.
 Each model was woken from cold-start, hit with the same 15-utterance test set (4 quality probes + 11-line accounting dialogue), and measured for wall-clock latency, GPU-side synthesis time, real-time factor (RTF), and audio duration.
 
-**Tested:** Meta MMS-TTS Deutsch, Piper TTS (Rhasspy), Coqui XTTS-v2, Coqui Thorsten-VITS DE
+**Tested:** Meta MMS-TTS Deutsch, Coqui XTTS-v2, Coqui Thorsten-VITS DE, Piper TTS (Rhasspy)
 **Date:** 2026-05-18  ·  **Region:** Modal `us`  ·  **Budget burn:** see *Costs* section
 
 ---
@@ -45,18 +45,18 @@ Realer 11-Zeilen-Dialog (~30–75 Sekunden je Modell, **Agent fordert Rechnung a
 | Modell | Params | Lizenz | GPU/Compute | $/h aktiv | Deutsche Voices | Technologie |
 |---|---|---|---|---:|---|---|
 | **Meta MMS-TTS Deutsch** | ~36M | CC-BY-NC-4.0 | L4 (24 GB) | $0.80 | 1 (Standard) | VITS, transformers |
-| **Piper TTS (Rhasspy)** | ~30M (ONNX) | MIT | **CPU** (2 cores) | $0.047 | thorsten, kerstin, eva_k, pavoque | VITS-style ONNX, eSpeak-NG phonemizer |
 | **Coqui XTTS-v2** | ~470M | CPML (nicht-kommerziell) | L4 (24 GB) | $0.80 | 10+ Speaker (multilingual) | GPT + HiFi-GAN, Voice Cloning |
 | **Coqui Thorsten-VITS DE** | ~30M | MIT | L4 (24 GB) | $0.80 | 1 (Thorsten Müller, native) | VITS, Coqui-TTS Pipeline |
+| **Piper TTS (Rhasspy)** | ~30M (ONNX) | MIT | **CPU** (2 cores) | $0.047 | thorsten, kerstin, eva_k, pavoque | VITS-style ONNX, eSpeak-NG phonemizer |
 
 ## Latenz-Vergleich (gemessen live auf Modal)
 
 | Modell | Cold-Start (1. Request) | Warm Wall-Latenz | GPU Synth-Time | RTF (synth/audio) | Speed-up vs. realtime |
 |---|---:|---:|---:|---:|---:|
 | **Meta MMS-TTS Deutsch** | 11.85s | 1.11s | 0.135s | **0.030** | **33.6×** |
-| **Piper TTS (Rhasspy)** | 11.23s | 3.22s | 2.147s | **0.679** | **1.5×** |
 | **Coqui XTTS-v2** | 123.80s | 3.45s | 2.264s | **0.367** | **2.7×** |
 | **Coqui Thorsten-VITS DE** | 89.94s | 1.90s | 0.881s | **0.161** | **6.2×** |
+| **Piper TTS (Rhasspy)** | 6.56s | 2.75s | 1.712s | **0.455** | **2.2×** |
 
 > **RTF (Real-Time Factor)** < 1.0 = schneller als Echtzeit. Speed-up = wieviel mal schneller als gesprochene Audiolänge synthetisiert.
 
@@ -98,26 +98,6 @@ Methode: jedes Sample wird mit **Whisper Large-v3** (NVIDIA SOTA-ASR) auf Deutsc
 | `09_user` | default | 1.00 | 0.132 | 3.872 | 0.034 | 0.000 | [🔊 .wav](audio_out/mms__dialog__09_user.wav) |
 | `10_agent` | default | 1.01 | 0.130 | 3.024 | 0.043 | 0.000 | [🔊 .wav](audio_out/mms__dialog__10_agent.wav) |
 
-### Piper TTS (Rhasspy)
-
-| Sample | Voice | Wall (s) | Synth (s) | Audio (s) | RTF | CER | File |
-|---|---|---:|---:|---:|---:|---:|---|
-| `greeting` | de_DE-thorsten-medium | 11.23 | 6.171 | 2.995 | 2.060 | 0.000 | [🔊 .wav](audio_out/piper__short__greeting.wav) |
-| `umlauts` | de_DE-thorsten-medium | 3.43 | 2.239 | 5.016 | 0.446 | 0.019 | [🔊 .wav](audio_out/piper__short__umlauts.wav) |
-| `numbers` | de_DE-thorsten-medium | 3.53 | 2.175 | 4.377 | 0.497 | 0.487 | [🔊 .wav](audio_out/piper__short__numbers.wav) |
-| `phone` | de_DE-thorsten-medium | 3.28 | 2.203 | 5.120 | 0.430 | 0.698 | [🔊 .wav](audio_out/piper__short__phone.wav) |
-| `00_agent` | de_DE-kerstin-low | 4.14 | 3.057 | 2.635 | 1.160 | 0.038 | [🔊 .wav](audio_out/piper__dialog__00_agent.wav) |
-| `01_agent` | de_DE-kerstin-low | 3.11 | 2.143 | 3.402 | 0.630 | 0.377 | [🔊 .wav](audio_out/piper__dialog__01_agent.wav) |
-| `02_user` | de_DE-thorsten-medium | 3.16 | 2.151 | 3.228 | 0.666 | 0.000 | [🔊 .wav](audio_out/piper__dialog__02_user.wav) |
-| `03_agent` | de_DE-kerstin-low | 3.28 | 2.186 | 3.692 | 0.592 | 0.024 | [🔊 .wav](audio_out/piper__dialog__03_agent.wav) |
-| `04_user` | de_DE-thorsten-medium | 3.16 | 2.114 | 3.077 | 0.687 | 0.000 | [🔊 .wav](audio_out/piper__dialog__04_user.wav) |
-| `05_agent` | de_DE-kerstin-low | 3.08 | 2.064 | 2.752 | 0.750 | 0.000 | [🔊 .wav](audio_out/piper__dialog__05_agent.wav) |
-| `06_agent` | de_DE-kerstin-low | 3.11 | 2.123 | 3.088 | 0.687 | 0.000 | [🔊 .wav](audio_out/piper__dialog__06_agent.wav) |
-| `07_user` | de_DE-thorsten-medium | 3.07 | 2.111 | 2.577 | 0.819 | 0.000 | [🔊 .wav](audio_out/piper__dialog__07_user.wav) |
-| `08_agent` | de_DE-kerstin-low | 3.37 | 2.292 | 3.088 | 0.742 | 0.419 | [🔊 .wav](audio_out/piper__dialog__08_agent.wav) |
-| `09_user` | de_DE-thorsten-medium | 3.31 | 2.064 | 3.077 | 0.671 | 0.000 | [🔊 .wav](audio_out/piper__dialog__09_user.wav) |
-| `10_agent` | de_DE-kerstin-low | 2.91 | 2.011 | 1.591 | 1.264 | 0.000 | [🔊 .wav](audio_out/piper__dialog__10_agent.wav) |
-
 ### Coqui XTTS-v2
 
 | Sample | Voice | Wall (s) | Synth (s) | Audio (s) | RTF | CER | File |
@@ -158,6 +138,26 @@ Methode: jedes Sample wird mit **Whisper Large-v3** (NVIDIA SOTA-ASR) auf Deutsc
 | `09_user` | default | 1.82 | 0.940 | 5.029 | 0.187 | 0.000 | [🔊 .wav](audio_out/thorsten__dialog__09_user.wav) |
 | `10_agent` | default | 1.34 | 0.407 | 2.857 | 0.142 | 0.000 | [🔊 .wav](audio_out/thorsten__dialog__10_agent.wav) |
 
+### Piper TTS (Rhasspy)
+
+| Sample | Voice | Wall (s) | Synth (s) | Audio (s) | RTF | CER | File |
+|---|---|---:|---:|---:|---:|---:|---|
+| `greeting` | de_DE-thorsten-medium | 6.56 | 2.148 | 2.937 | 0.731 | 0.000 | [🔊 .wav](audio_out/piper__short__greeting.wav) |
+| `umlauts` | de_DE-thorsten-medium | 2.80 | 1.731 | 4.911 | 0.352 | 0.019 | [🔊 .wav](audio_out/piper__short__umlauts.wav) |
+| `numbers` | de_DE-thorsten-medium | 2.82 | 1.728 | 4.505 | 0.384 | 0.487 | [🔊 .wav](audio_out/piper__short__numbers.wav) |
+| `phone` | de_DE-thorsten-medium | 2.75 | 1.773 | 4.853 | 0.365 | 0.698 | [🔊 .wav](audio_out/piper__short__phone.wav) |
+| `00_agent` | de_DE-thorsten-medium | 2.64 | 1.783 | 3.251 | 0.548 | 0.038 | [🔊 .wav](audio_out/piper__dialog__00_agent.wav) |
+| `01_agent` | de_DE-thorsten-medium | 2.80 | 1.709 | 4.040 | 0.423 | 0.377 | [🔊 .wav](audio_out/piper__dialog__01_agent.wav) |
+| `02_user` | de_DE-thorsten-medium | 2.66 | 1.662 | 3.251 | 0.511 | 0.000 | [🔊 .wav](audio_out/piper__dialog__02_user.wav) |
+| `03_agent` | de_DE-thorsten-medium | 2.75 | 1.681 | 4.772 | 0.352 | 0.024 | [🔊 .wav](audio_out/piper__dialog__03_agent.wav) |
+| `04_user` | de_DE-thorsten-medium | 2.81 | 1.751 | 3.088 | 0.567 | 0.000 | [🔊 .wav](audio_out/piper__dialog__04_user.wav) |
+| `05_agent` | de_DE-thorsten-medium | 2.67 | 1.724 | 3.704 | 0.466 | 0.000 | [🔊 .wav](audio_out/piper__dialog__05_agent.wav) |
+| `06_agent` | de_DE-thorsten-medium | 2.67 | 1.702 | 3.936 | 0.432 | 0.000 | [🔊 .wav](audio_out/piper__dialog__06_agent.wav) |
+| `07_user` | de_DE-thorsten-medium | 2.69 | 1.715 | 2.670 | 0.642 | 0.000 | [🔊 .wav](audio_out/piper__dialog__07_user.wav) |
+| `08_agent` | de_DE-thorsten-medium | 2.80 | 1.694 | 3.808 | 0.445 | 0.419 | [🔊 .wav](audio_out/piper__dialog__08_agent.wav) |
+| `09_user` | de_DE-thorsten-medium | 2.79 | 1.693 | 3.367 | 0.503 | 0.000 | [🔊 .wav](audio_out/piper__dialog__09_user.wav) |
+| `10_agent` | de_DE-thorsten-medium | 2.45 | 1.614 | 2.136 | 0.756 | 0.000 | [🔊 .wav](audio_out/piper__dialog__10_agent.wav) |
+
 ## 🎭 Buchhaltungs-Dialog (Vergleich der Stimmen)
 
 Realistisches Szenario: Buchhaltung fordert eine Rechnung an, der User fragt wo er sie hochladen soll, der Agent verweist auf einen Upload-Link per E-Mail.
@@ -179,22 +179,6 @@ Realistisches Szenario: Buchhaltung fordert eine Rechnung an, der User fragt wo 
 | 08 | **agent** | Spätestens bis Freitag, den dreiundzwanzigsten Mai, achtzehn Uhr. | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/mms__dialog__08_agent.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/mms__dialog__08_agent.mp3">⬇ mms__dialog__08_agent.mp3</a></audio> |
 | 09 | **user** | Wunderbar. Vielen Dank für die Information, auf Wiederhören. | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/mms__dialog__09_user.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/mms__dialog__09_user.mp3">⬇ mms__dialog__09_user.mp3</a></audio> |
 | 10 | **agent** | Vielen Dank, einen schönen Tag noch. | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/mms__dialog__10_agent.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/mms__dialog__10_agent.mp3">⬇ mms__dialog__10_agent.mp3</a></audio> |
-
-### Piper TTS (Rhasspy)
-
-| # | Sprecher | Text | Audio (Player) |
-|---|---|---|---|
-| 00 | **agent** | Guten Tag, hier spricht die Buchhaltung von Servas AI. | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__00_agent.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__00_agent.mp3">⬇ piper__dialog__00_agent.mp3</a></audio> |
-| 01 | **agent** | Wir benötigen noch Ihre Rechnung vom April zweitausendsechsundzwanzig. | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__01_agent.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__01_agent.mp3">⬇ piper__dialog__01_agent.mp3</a></audio> |
-| 02 | **user** | Guten Tag. Können Sie mir sagen, wo ich diese Rechnung finde? | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__02_user.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__02_user.mp3">⬇ piper__dialog__02_user.mp3</a></audio> |
-| 03 | **agent** | Selbstverständlich. Die finden Sie in Ihrem Kundenportal unter dem Punkt Rechnungen. | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__03_agent.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__03_agent.mp3">⬇ piper__dialog__03_agent.mp3</a></audio> |
-| 04 | **user** | Verstehe. Und wo genau soll ich die Datei dann hochladen? | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__04_user.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__04_user.mp3">⬇ piper__dialog__04_user.mp3</a></audio> |
-| 05 | **agent** | Sie erhalten gleich eine E-Mail mit einem persönlichen Upload-Link. | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__05_agent.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__05_agent.mp3">⬇ piper__dialog__05_agent.mp3</a></audio> |
-| 06 | **agent** | Bitte laden Sie die Rechnung über diesen Link hoch, nicht per Antwort-Mail. | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__06_agent.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__06_agent.mp3">⬇ piper__dialog__06_agent.mp3</a></audio> |
-| 07 | **user** | Alles klar. Bis wann muss das erledigt sein? | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__07_user.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__07_user.mp3">⬇ piper__dialog__07_user.mp3</a></audio> |
-| 08 | **agent** | Spätestens bis Freitag, den dreiundzwanzigsten Mai, achtzehn Uhr. | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__08_agent.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__08_agent.mp3">⬇ piper__dialog__08_agent.mp3</a></audio> |
-| 09 | **user** | Wunderbar. Vielen Dank für die Information, auf Wiederhören. | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__09_user.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__09_user.mp3">⬇ piper__dialog__09_user.mp3</a></audio> |
-| 10 | **agent** | Vielen Dank, einen schönen Tag noch. | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__10_agent.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__10_agent.mp3">⬇ piper__dialog__10_agent.mp3</a></audio> |
 
 ### Coqui XTTS-v2
 
@@ -227,6 +211,22 @@ Realistisches Szenario: Buchhaltung fordert eine Rechnung an, der User fragt wo 
 | 08 | **agent** | Spätestens bis Freitag, den dreiundzwanzigsten Mai, achtzehn Uhr. | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/thorsten__dialog__08_agent.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/thorsten__dialog__08_agent.mp3">⬇ thorsten__dialog__08_agent.mp3</a></audio> |
 | 09 | **user** | Wunderbar. Vielen Dank für die Information, auf Wiederhören. | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/thorsten__dialog__09_user.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/thorsten__dialog__09_user.mp3">⬇ thorsten__dialog__09_user.mp3</a></audio> |
 | 10 | **agent** | Vielen Dank, einen schönen Tag noch. | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/thorsten__dialog__10_agent.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/thorsten__dialog__10_agent.mp3">⬇ thorsten__dialog__10_agent.mp3</a></audio> |
+
+### Piper TTS (Rhasspy)
+
+| # | Sprecher | Text | Audio (Player) |
+|---|---|---|---|
+| 00 | **agent** | Guten Tag, hier spricht die Buchhaltung von Servas AI. | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__00_agent.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__00_agent.mp3">⬇ piper__dialog__00_agent.mp3</a></audio> |
+| 01 | **agent** | Wir benötigen noch Ihre Rechnung vom April zweitausendsechsundzwanzig. | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__01_agent.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__01_agent.mp3">⬇ piper__dialog__01_agent.mp3</a></audio> |
+| 02 | **user** | Guten Tag. Können Sie mir sagen, wo ich diese Rechnung finde? | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__02_user.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__02_user.mp3">⬇ piper__dialog__02_user.mp3</a></audio> |
+| 03 | **agent** | Selbstverständlich. Die finden Sie in Ihrem Kundenportal unter dem Punkt Rechnungen. | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__03_agent.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__03_agent.mp3">⬇ piper__dialog__03_agent.mp3</a></audio> |
+| 04 | **user** | Verstehe. Und wo genau soll ich die Datei dann hochladen? | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__04_user.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__04_user.mp3">⬇ piper__dialog__04_user.mp3</a></audio> |
+| 05 | **agent** | Sie erhalten gleich eine E-Mail mit einem persönlichen Upload-Link. | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__05_agent.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__05_agent.mp3">⬇ piper__dialog__05_agent.mp3</a></audio> |
+| 06 | **agent** | Bitte laden Sie die Rechnung über diesen Link hoch, nicht per Antwort-Mail. | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__06_agent.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__06_agent.mp3">⬇ piper__dialog__06_agent.mp3</a></audio> |
+| 07 | **user** | Alles klar. Bis wann muss das erledigt sein? | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__07_user.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__07_user.mp3">⬇ piper__dialog__07_user.mp3</a></audio> |
+| 08 | **agent** | Spätestens bis Freitag, den dreiundzwanzigsten Mai, achtzehn Uhr. | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__08_agent.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__08_agent.mp3">⬇ piper__dialog__08_agent.mp3</a></audio> |
+| 09 | **user** | Wunderbar. Vielen Dank für die Information, auf Wiederhören. | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__09_user.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__09_user.mp3">⬇ piper__dialog__09_user.mp3</a></audio> |
+| 10 | **agent** | Vielen Dank, einen schönen Tag noch. | <audio controls preload="none"><source src="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__10_agent.mp3" type="audio/mpeg"><a href="https://raw.githubusercontent.com/vibecode-vm/german-tts-modal-benchmark/main/audio_mp3/piper__dialog__10_agent.mp3">⬇ piper__dialog__10_agent.mp3</a></audio> |
 
 ## Test-Skript (Buchhaltung)
 

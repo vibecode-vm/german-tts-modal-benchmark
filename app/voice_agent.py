@@ -25,9 +25,26 @@ SAMPLE_RATE = 22050
 
 app = modal.App(APP_NAME)
 cache = modal.Volume.from_name("voice-agent-cache", create_if_missing=True)
-CACHE = "/cache"
+CACHE = "/vol-cache"
 PIPER_VOICE_URL_ONNX = "https://huggingface.co/rhasspy/piper-voices/resolve/main/de/de_DE/thorsten/medium/de_DE-thorsten-medium.onnx"
 PIPER_VOICE_URL_JSON = "https://huggingface.co/rhasspy/piper-voices/resolve/main/de/de_DE/thorsten/medium/de_DE-thorsten-medium.onnx.json"
+
+def _bake_models():
+    """Pre-download Whisper-base and Piper voice into the image (build-time)."""
+    import subprocess
+    from pathlib import Path
+    from faster_whisper import WhisperModel
+    # Whisper goes to /opt/models (in-image, not on volume)
+    WhisperModel("base", device="cpu", compute_type="int8",
+                 download_root="/opt/models/whisper")
+    # Piper voice
+    pv = Path("/opt/models/piper")
+    pv.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["wget", "-q", "-O", str(pv/"model.onnx"),
+                    "https://huggingface.co/rhasspy/piper-voices/resolve/main/de/de_DE/thorsten/medium/de_DE-thorsten-medium.onnx"], check=True)
+    subprocess.run(["wget", "-q", "-O", str(pv/"model.onnx.json"),
+                    "https://huggingface.co/rhasspy/piper-voices/resolve/main/de/de_DE/thorsten/medium/de_DE-thorsten-medium.onnx.json"], check=True)
+
 
 image = (
     modal.Image.debian_slim(python_version="3.12")
@@ -36,9 +53,10 @@ image = (
         "piper-tts==1.3.0",
         "faster-whisper==1.0.3",
         "numpy<2.0",
+        "requests", "huggingface_hub",
         "fastapi[standard]", "pydantic", "python-multipart",
     )
-    .env({"HF_HOME": CACHE, "XDG_CACHE_HOME": CACHE})
+    .run_function(_bake_models)
 )
 
 with image.imports():
@@ -80,21 +98,8 @@ def respond(user_text: str) -> str:
 
 # --- Piper voice download helper --------------------------------------------
 
-def _ensure_piper_voice() -> Path:
-    cache = Path(CACHE) / "piper" / "de_DE-thorsten-medium"
-    cache.mkdir(parents=True, exist_ok=True)
-    onnx = cache / "model.onnx"
-    cfg = cache / "model.onnx.json"
-    if not onnx.exists():
-        subprocess.run(["wget", "-q", "-O", str(onnx), PIPER_VOICE_URL_ONNX], check=True)
-    if not cfg.exists():
-        subprocess.run(["wget", "-q", "-O", str(cfg), PIPER_VOICE_URL_JSON], check=True)
-    return onnx
-
-
 @app.cls(
     image=image,
-    volumes={CACHE: cache},
     cpu=4.0,
     memory=4096,
     timeout=300,
@@ -104,12 +109,11 @@ class VoiceAgent:
     @modal.enter()
     def setup(self):
         t0 = time.perf_counter()
-        print("Loading Whisper base int8...")
+        print("Loading Whisper base int8 (pre-baked)...")
         self.whisper = WhisperModel("base", device="cpu", compute_type="int8",
-                                     download_root=CACHE)
+                                     download_root="/opt/models/whisper")
         print(f"Whisper loaded in {time.perf_counter()-t0:.1f}s")
-        print("Downloading Piper voice...")
-        self.piper_voice = _ensure_piper_voice()
+        self.piper_voice = Path("/opt/models/piper/model.onnx")
         # Warmup Piper
         subprocess.run(["piper", "--model", str(self.piper_voice), "--output-raw"],
                        input=b"Hallo", capture_output=True, check=True)

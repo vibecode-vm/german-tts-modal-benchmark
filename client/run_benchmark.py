@@ -18,10 +18,11 @@ import httpx
 from dialog import DIALOG, SHORT_TESTS
 
 MODELS = {
-    "piper":   ("https://martin-hausleitner--piper-de-tts-piperde-web.modal.run",   "de_DE-thorsten-medium"),
-    "mms":     ("https://martin-hausleitner--mms-de-tts-mmsde-web.modal.run",       "default"),
-    "xtts":    ("https://martin-hausleitner--xtts-de-tts-xttsde-web.modal.run",     "female"),
-    "orpheus": ("https://martin-hausleitner--orpheus-de-tts-orpheusde-web.modal.run", "Jakob"),
+    "piper":    ("https://martin-hausleitner--piper-de-tts-piperde-web.modal.run",       "de_DE-thorsten-medium"),
+    "mms":      ("https://martin-hausleitner--mms-de-tts-mmsde-web.modal.run",           "default"),
+    "xtts":     ("https://martin-hausleitner--xtts-de-tts-xttsde-web.modal.run",         "female"),
+    "thorsten": ("https://martin-hausleitner--thorsten-de-tts-thorstende-web.modal.run", "default"),
+    "orpheus":  ("https://martin-hausleitner--orpheus-de-tts-orpheusde-web.modal.run",   "Jakob"),
 }
 
 OUT = Path(__file__).parent.parent / "audio_out"

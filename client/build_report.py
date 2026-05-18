@@ -57,6 +57,16 @@ MODEL_META = {
         "voices_de": "10+ Speaker (multilingual)",
         "tech": "GPT + HiFi-GAN, Voice Cloning",
     },
+    "thorsten": {
+        "full_name": "Coqui Thorsten-VITS DE",
+        "params": "~30M",
+        "license": "MIT",
+        "hf": "tts_models/de/thorsten/vits (Coqui Studio)",
+        "gpu": "L4 (24 GB)",
+        "cost_per_hr": "$0.80",
+        "voices_de": "1 (Thorsten Müller, native)",
+        "tech": "VITS, Coqui-TTS Pipeline",
+    },
     "orpheus": {
         "full_name": "Orpheus-3B German (Kartoffel)",
         "params": "~3 B",

@@ -148,6 +148,21 @@
   <tr><td>Coqui XTTS-v2</td><td class="r">$0.80 (L4)</td><td class="r">~$0.005</td><td>CPML (nicht-kommerziell) ⚠️</td></tr>
 </table>
 
+<h2>💰 Tatsächliche Kosten (Live aus Modal-Billing)</h2>
+<p>Gesamt-Burn für die komplette Test-Session: <b>$1.68 USD</b> (≈ €1.55). Modal Starter-Credits ($30/Monat gratis) decken das vollständig → <b>$0.00 out-of-pocket</b>.</p>
+<table>
+  <tr><th>App</th><th class="r">Kosten USD</th><th class="r">% Total</th><th>Was passierte</th></tr>
+  <tr><td><b>xtts-de-tts</b></td><td class="r">$1.4499</td><td class="r">86.1%</td><td>Größtes Image (PyTorch+TTS+DeepSpeed), 124s Cold-Start</td></tr>
+  <tr><td><b>orpheus-de-tts</b></td><td class="r">$0.1162</td><td class="r">6.9%</td><td>3 fehlgeschlagene Deploy-Versuche</td></tr>
+  <tr><td><b>thorsten-de-tts</b></td><td class="r">$0.0385</td><td class="r">2.3%</td><td>Sauberer Deploy + Test</td></tr>
+  <tr><td><b>mms-de-tts</b></td><td class="r">$0.0285</td><td class="r">1.7%</td><td>Sauberer Deploy + Test</td></tr>
+  <tr><td><b>magpie-de-tts</b></td><td class="r">$0.0191</td><td class="r">1.1%</td><td>3× crash-loop (NeMo-Versions-Mismatch)</td></tr>
+  <tr><td><b>voice-agent-de</b></td><td class="r">$0.0162</td><td class="r">1.0%</td><td>Live Push-to-Talk Agent</td></tr>
+  <tr><td><b>piper-de-tts</b></td><td class="r">$0.0151</td><td class="r">0.9%</td><td>Erfolgreich + 2× neu rendert (Voice-Fix)</td></tr>
+  <tr><td><b>TOTAL</b></td><td class="r"><b>$1.6834</b></td><td class="r">100%</td><td></td></tr>
+</table>
+<p style="color:var(--muted);font-size:13px"><b>Lesson:</b> 86% des Burns von 1 App (XTTS). Piper auf CPU ist 95× günstiger. <code>min_containers=0</code> Pflicht — ohne wären es ~$200/Tag gewesen.</p>
+
 <h2>🚫 Ausgeschlossene Speech-to-Speech Modelle</h2>
 <table>
   <tr><th>Modell</th><th class="r">Score</th><th>Sprachen</th><th>Grund</th></tr>

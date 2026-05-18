@@ -1,0 +1,86 @@
+[
+  {
+    "Object ID": "ap-2hwvFjibj4jkdEe3fcoVvu",
+    "Description": "xtts-de-tts",
+    "Environment": "main",
+    "Interval Start": "2026-05-18T00:00:00",
+    "Cost": "0.05229605"
+  },
+  {
+    "Object ID": "ap-31FxroGU2bn5AmL6oiHWlD",
+    "Description": "voice-agent-de",
+    "Environment": "main",
+    "Interval Start": "2026-05-18T00:00:00",
+    "Cost": "0.01523941"
+  },
+  {
+    "Object ID": "ap-Hc83zLCb2zRD9Yl741uhWW",
+    "Description": "thorsten-de-tts",
+    "Environment": "main",
+    "Interval Start": "2026-05-18T00:00:00",
+    "Cost": "0.03845054"
+  },
+  {
+    "Object ID": "ap-MM5UVXyySnqp25NCnorCh2",
+    "Description": "piper-de-tts",
+    "Environment": "main",
+    "Interval Start": "2026-05-18T00:00:00",
+    "Cost": "0.00645057"
+  },
+  {
+    "Object ID": "ap-XexU8TEYvr1wJBVqQdACxN",
+    "Description": "magpie-de-tts",
+    "Environment": "main",
+    "Interval Start": "2026-05-18T00:00:00",
+    "Cost": "0.01908403"
+  },
+  {
+    "Object ID": "ap-fZDGXIqBTdKm9U0rxyXsav",
+    "Description": "xtts-de-tts",
+    "Environment": "main",
+    "Interval Start": "2026-05-18T00:00:00",
+    "Cost": "1.39762388"
+  },
+  {
+    "Object ID": "ap-o8hawCCz3i5FCkMGBGQOg7",
+    "Description": "piper-de-tts",
+    "Environment": "main",
+    "Interval Start": "2026-05-18T00:00:00",
+    "Cost": "0.00868697"
+  },
+  {
+    "Object ID": "ap-rcG0H24Xao2AosrtIfBdQR",
+    "Description": "orpheus-de-tts",
+    "Environment": "main",
+    "Interval Start": "2026-05-18T00:00:00",
+    "Cost": "0.11620809"
+  },
+  {
+    "Object ID": "ap-wVUnlnLJOF86iWaj1YfPWU",
+    "Description": "mms-de-tts",
+    "Environment": "main",
+    "Interval Start": "2026-05-18T00:00:00",
+    "Cost": "0.02846699"
+  },
+  {
+    "Object ID": "ap-R1HkX4Mb2HDdf8eze0vq9M",
+    "Description": "voice-agent-de",
+    "Environment": "main",
+    "Interval Start": "2026-05-18T00:00:00",
+    "Cost": "0.00000384"
+  },
+  {
+    "Object ID": "ap-eBzQNfJ83ZWpl5SiB9xpPH",
+    "Description": "voice-agent-de",
+    "Environment": "main",
+    "Interval Start": "2026-05-18T00:00:00",
+    "Cost": "0.00090418"
+  },
+  {
+    "Object ID": "ap-hhWpTs3HnCC6ie0zmrzUFt",
+    "Description": "voice-agent-de",
+    "Environment": "main",
+    "Interval Start": "2026-05-18T00:00:00",
+    "Cost": "0.00000384"
+  }
+]
